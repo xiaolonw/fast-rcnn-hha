@@ -1,0 +1,717 @@
+added /nfs.yoda/xiaolonw/fast_rcnn/fast-rcnn-hha/caffe-fast-rcnn/python
+added /nfs.yoda/xiaolonw/fast_rcnn/fast-rcnn-hha/lib
+added /nfs.yoda/xiaolonw/fast_rcnn/fast-rcnn-hha/python_utils
+added /nfs.yoda/xiaolonw/fast_rcnn/fast-rcnn-hha/.
+Vendor:  Continuum Analytics, Inc.
+Package: mkl
+Message: trial mode expires in 26 days
+Vendor:  Continuum Analytics, Inc.
+Package: mkl
+Message: trial mode expires in 26 days
+Called with args:
+Namespace(cfg_file='scripts/pre_alexnet_scratch2/config.prototxt', gpu_id=0, imdb_name='nyud2_image_hha_2015_trainval', max_iters=100000, pretrained_model=None, randomize=False, solver='scripts/pre_alexnet_scratch2/solver.prototxt')
+Using config:
+{'DEDUP_BOXES': 0.0625,
+ 'EPS': 1e-14,
+ 'EXP_DIR': 'pre_alexnet_scratch2',
+ 'PIXEL_MEANS': array([[[ 102.9801,  115.9465,  122.7717]]]),
+ 'RNG_SEED': 3,
+ 'ROOT_DIR': '/nfs.yoda/xiaolonw/fast_rcnn/fast-rcnn-hha',
+ 'TEST': {'BBOX_REG': True,
+          'DET_SALT': '',
+          'EVAL_SALT': '',
+          'MAX_PER_IMAGE': 100,
+          'MAX_PER_SET_F': 40,
+          'MAX_SIZE': 2000,
+          'NMS': 0.3,
+          'SCALES': [688],
+          'SVM': False},
+ 'TRAIN': {'BATCH_SIZE': 128,
+           'BBOX_PRED_PARAM_NAMES': ['da_bbox_pred'],
+           'BBOX_REG': True,
+           'BBOX_THRESH': 0.5,
+           'BG_THRESH_HI': 0.5,
+           'BG_THRESH_LO': 0.0,
+           'FG_FRACTION': 0.25,
+           'FG_THRESH': 0.5,
+           'IMS_PER_BATCH': 2,
+           'MAX_SIZE': 2000,
+           'SCALES': [688],
+           'SNAPSHOT_INFIX': '',
+           'SNAPSHOT_ITERS': 10000,
+           'USE_FLIPPED': True,
+           'USE_PREFETCH': False}}
+Loaded dataset `nyud2_image_hha_2015_trainval` for training
+Appending horizontally-flipped training examples...
+nyud2_image_hha_2015_trainval ss roidb loaded from /nfs.yoda/xiaolonw/fast_rcnn/fast-rcnn-hha/data/cache/nyud2_image_hha_2015_trainval_mcg_roidb.pkl
+done
+Preparing training data...
+done
+Output will be saved to `/nfs.yoda/xiaolonw/fast_rcnn/fast-rcnn-hha/output/pre_alexnet_scratch2/nyud2_image_hha_2015_trainval`
+Computing bounding-box regression targets...
+done
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0222 03:23:49.319694 16180 solver.cpp:32] Initializing solver from parameters: 
+train_net: "/nfs.yoda/xiaolonw/fast_rcnn/fast-rcnn-hha/scripts/pre_alexnet_scratch2/train.prototxt"
+base_lr: 0.01
+display: 20
+lr_policy: "step"
+gamma: 0.1
+momentum: 0.9
+weight_decay: 0.0005
+stepsize: 30000
+snapshot: 0
+snapshot_prefix: "/nfs.yoda/xiaolonw/fast_rcnn/models_hha/pre_alexnet_scratch2/fast_rcnn"
+average_loss: 100
+I0222 03:23:49.319743 16180 solver.cpp:61] Creating training net from train_net file: /nfs.yoda/xiaolonw/fast_rcnn/fast-rcnn-hha/scripts/pre_alexnet_scratch2/train.prototxt
+I0222 03:23:49.321535 16180 net.cpp:42] Initializing net from parameters: 
+name: "CaffeNet"
+state {
+  phase: TRAIN
+}
+layer {
+  name: "data"
+  type: "Python"
+  top: "data"
+  top: "rois"
+  top: "labels"
+  top: "bbox_targets"
+  top: "bbox_loss_weights"
+  python_param {
+    module: "roi_data_layer.layer_pi"
+    layer: "RoIDataLayerPi"
+    param_str: "--num_classes 20 --num_data 1"
+  }
+}
+layer {
+  name: "da_conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "da_conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    pad: 7
+    kernel_size: 11
+    stride: 4
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "da_relu1"
+  type: "ReLU"
+  bottom: "da_conv1"
+  top: "da_conv1"
+  relu_param {
+    negative_slope: 0.2
+  }
+}
+layer {
+  name: "da_pool1"
+  type: "Pooling"
+  bottom: "da_conv1"
+  top: "da_pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+    pad: 0
+  }
+}
+layer {
+  name: "da_conv2"
+  type: "Convolution"
+  bottom: "da_pool1"
+  top: "da_conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "da_relu2"
+  type: "ReLU"
+  bottom: "da_conv2"
+  top: "da_conv2"
+  relu_param {
+    negative_slope: 0.2
+  }
+}
+layer {
+  name: "da_pool2"
+  type: "Pooling"
+  bottom: "da_conv2"
+  top: "da_pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+    pad: 0
+  }
+}
+layer {
+  name: "da_conv3"
+  type: "Convolution"
+  bottom: "da_pool2"
+  top: "da_conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "da_relu3"
+  type: "ReLU"
+  bottom: "da_conv3"
+  top: "da_conv3"
+  relu_param {
+    negative_slope: 0.2
+  }
+}
+layer {
+  name: "da_conv4"
+  type: "Convolution"
+  bottom: "da_conv3"
+  top: "da_conv4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "da_relu4"
+  type: "ReLU"
+  bottom: "da_conv4"
+  top: "da_conv4"
+  relu_param {
+    negative_slope: 0.2
+  }
+}
+layer {
+  name: "da_conv5"
+  type: "Convolution"
+  bottom: "da_conv4"
+  top: "da_conv5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "da_relu5"
+  type: "ReLU"
+  bottom: "da_conv5"
+  top: "da_conv5"
+  relu_param {
+    negative_slope: 0.2
+  }
+}
+layer {
+  name: "da_roi_pool5"
+  type: "ROIPooling"
+  bottom: "da_conv5"
+  bottom: "rois"
+  top: "da_pool5"
+  roi_pooling_param {
+    pooled_h: 6
+    pooled_w: 6
+    spatial_scale: 0.0625
+  }
+}
+layer {
+  name: "da_fc6"
+  type: "InnerProduct"
+  bottom: "da_pool5"
+  top: "da_fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "da_relu6"
+  type: "ReLU"
+  bottom: "da_fc6"
+  top: "da_fc6"
+}
+layer {
+  name: "da_drop6"
+  type: "Dropout"
+  bottom: "da_fc6"
+  top: "da_fc6"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "da_fc7"
+  type: "InnerProduct"
+  bottom: "da_fc6"
+  top: "da_fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 1
+    }
+  }
+}
+layer {
+  name: "da_relu7"
+  type: "ReLU"
+  bottom: "da_fc7"
+  top: "da_fc7"
+}
+layer {
+  name: "da_drop7"
+  type: "Dropout"
+  bottom: "da_fc7"
+  top: "da_fc7"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "da_cls_score"
+  type: "InnerProduct"
+  bottom: "da_fc7"
+  top: "cls_score_1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 20
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "da_bbox_pred"
+  type: "InnerProduct"
+  bottom: "da_fc7"
+  top: "bbox_pred_1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 80
+    weight_filler {
+      type: "gaussian"
+      std: 0.001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "da_loss_cls"
+  type: "SoftmaxWithLoss"
+  bottom: "cls_score_1"
+  bottom: "labels"
+  top: "da_loss_cls"
+  loss_weight: 0.5
+}
+layer {
+  name: "da_loss_bbox"
+  type: "SmoothL1Loss"
+  bottom: "bbox_pred_1"
+  bottom: "bbox_targets"
+  bottom: "bbox_loss_weights"
+  top: "da_loss_bbox"
+  loss_weight: 0.5
+}
+I0222 03:23:49.321771 16180 layer_factory.hpp:74] Creating layer data
+I0222 03:23:49.324429 16180 net.cpp:84] Creating Layer data
+I0222 03:23:49.324460 16180 net.cpp:338] data -> data
+I0222 03:23:49.324483 16180 net.cpp:338] data -> rois
+I0222 03:23:49.324502 16180 net.cpp:338] data -> labels
+I0222 03:23:49.324520 16180 net.cpp:338] data -> bbox_targets
+I0222 03:23:49.324534 16180 net.cpp:338] data -> bbox_loss_weights
+I0222 03:23:49.324548 16180 net.cpp:113] Setting up data
+I0222 03:23:49.325490 16180 net.cpp:120] Top shape: 1 6 100 100 (60000)
+I0222 03:23:49.325506 16180 net.cpp:120] Top shape: 1 5 (5)
+I0222 03:23:49.325515 16180 net.cpp:120] Top shape: 1 (1)
+I0222 03:23:49.325525 16180 net.cpp:120] Top shape: 1 80 (80)
+I0222 03:23:49.325536 16180 net.cpp:120] Top shape: 1 80 (80)
+I0222 03:23:49.325549 16180 layer_factory.hpp:74] Creating layer da_conv1
+I0222 03:23:49.325575 16180 net.cpp:84] Creating Layer da_conv1
+I0222 03:23:49.325584 16180 net.cpp:380] da_conv1 <- data
+I0222 03:23:49.325600 16180 net.cpp:338] da_conv1 -> da_conv1
+I0222 03:23:49.325618 16180 net.cpp:113] Setting up da_conv1
+I0222 03:23:49.327244 16180 net.cpp:120] Top shape: 1 96 26 26 (64896)
+I0222 03:23:49.327276 16180 layer_factory.hpp:74] Creating layer da_relu1
+I0222 03:23:49.327296 16180 net.cpp:84] Creating Layer da_relu1
+I0222 03:23:49.327306 16180 net.cpp:380] da_relu1 <- da_conv1
+I0222 03:23:49.327321 16180 net.cpp:327] da_relu1 -> da_conv1 (in-place)
+I0222 03:23:49.327334 16180 net.cpp:113] Setting up da_relu1
+I0222 03:23:49.327350 16180 net.cpp:120] Top shape: 1 96 26 26 (64896)
+I0222 03:23:49.327359 16180 layer_factory.hpp:74] Creating layer da_pool1
+I0222 03:23:49.327375 16180 net.cpp:84] Creating Layer da_pool1
+I0222 03:23:49.327383 16180 net.cpp:380] da_pool1 <- da_conv1
+I0222 03:23:49.327396 16180 net.cpp:338] da_pool1 -> da_pool1
+I0222 03:23:49.327411 16180 net.cpp:113] Setting up da_pool1
+I0222 03:23:49.327435 16180 net.cpp:120] Top shape: 1 96 13 13 (16224)
+I0222 03:23:49.327443 16180 layer_factory.hpp:74] Creating layer da_conv2
+I0222 03:23:49.327461 16180 net.cpp:84] Creating Layer da_conv2
+I0222 03:23:49.327469 16180 net.cpp:380] da_conv2 <- da_pool1
+I0222 03:23:49.327484 16180 net.cpp:338] da_conv2 -> da_conv2
+I0222 03:23:49.327498 16180 net.cpp:113] Setting up da_conv2
+I0222 03:23:49.340982 16180 net.cpp:120] Top shape: 1 256 13 13 (43264)
+I0222 03:23:49.341030 16180 layer_factory.hpp:74] Creating layer da_relu2
+I0222 03:23:49.341048 16180 net.cpp:84] Creating Layer da_relu2
+I0222 03:23:49.341058 16180 net.cpp:380] da_relu2 <- da_conv2
+I0222 03:23:49.341070 16180 net.cpp:327] da_relu2 -> da_conv2 (in-place)
+I0222 03:23:49.341095 16180 net.cpp:113] Setting up da_relu2
+I0222 03:23:49.341109 16180 net.cpp:120] Top shape: 1 256 13 13 (43264)
+I0222 03:23:49.341114 16180 layer_factory.hpp:74] Creating layer da_pool2
+I0222 03:23:49.341125 16180 net.cpp:84] Creating Layer da_pool2
+I0222 03:23:49.341128 16180 net.cpp:380] da_pool2 <- da_conv2
+I0222 03:23:49.341135 16180 net.cpp:338] da_pool2 -> da_pool2
+I0222 03:23:49.341146 16180 net.cpp:113] Setting up da_pool2
+I0222 03:23:49.341158 16180 net.cpp:120] Top shape: 1 256 6 6 (9216)
+I0222 03:23:49.341162 16180 layer_factory.hpp:74] Creating layer da_conv3
+I0222 03:23:49.341174 16180 net.cpp:84] Creating Layer da_conv3
+I0222 03:23:49.341178 16180 net.cpp:380] da_conv3 <- da_pool2
+I0222 03:23:49.341184 16180 net.cpp:338] da_conv3 -> da_conv3
+I0222 03:23:49.341192 16180 net.cpp:113] Setting up da_conv3
+I0222 03:23:49.360980 16180 net.cpp:120] Top shape: 1 384 6 6 (13824)
+I0222 03:23:49.361033 16180 layer_factory.hpp:74] Creating layer da_relu3
+I0222 03:23:49.361057 16180 net.cpp:84] Creating Layer da_relu3
+I0222 03:23:49.361065 16180 net.cpp:380] da_relu3 <- da_conv3
+I0222 03:23:49.361088 16180 net.cpp:327] da_relu3 -> da_conv3 (in-place)
+I0222 03:23:49.361107 16180 net.cpp:113] Setting up da_relu3
+I0222 03:23:49.361121 16180 net.cpp:120] Top shape: 1 384 6 6 (13824)
+I0222 03:23:49.361131 16180 layer_factory.hpp:74] Creating layer da_conv4
+I0222 03:23:49.361152 16180 net.cpp:84] Creating Layer da_conv4
+I0222 03:23:49.361161 16180 net.cpp:380] da_conv4 <- da_conv3
+I0222 03:23:49.361176 16180 net.cpp:338] da_conv4 -> da_conv4
+I0222 03:23:49.361194 16180 net.cpp:113] Setting up da_conv4
+I0222 03:23:49.390427 16180 net.cpp:120] Top shape: 1 384 6 6 (13824)
+I0222 03:23:49.390463 16180 layer_factory.hpp:74] Creating layer da_relu4
+I0222 03:23:49.390480 16180 net.cpp:84] Creating Layer da_relu4
+I0222 03:23:49.390488 16180 net.cpp:380] da_relu4 <- da_conv4
+I0222 03:23:49.390504 16180 net.cpp:327] da_relu4 -> da_conv4 (in-place)
+I0222 03:23:49.390522 16180 net.cpp:113] Setting up da_relu4
+I0222 03:23:49.390535 16180 net.cpp:120] Top shape: 1 384 6 6 (13824)
+I0222 03:23:49.390544 16180 layer_factory.hpp:74] Creating layer da_conv5
+I0222 03:23:49.390563 16180 net.cpp:84] Creating Layer da_conv5
+I0222 03:23:49.390571 16180 net.cpp:380] da_conv5 <- da_conv4
+I0222 03:23:49.390585 16180 net.cpp:338] da_conv5 -> da_conv5
+I0222 03:23:49.390601 16180 net.cpp:113] Setting up da_conv5
+I0222 03:23:49.409906 16180 net.cpp:120] Top shape: 1 256 6 6 (9216)
+I0222 03:23:49.409945 16180 layer_factory.hpp:74] Creating layer da_relu5
+I0222 03:23:49.409963 16180 net.cpp:84] Creating Layer da_relu5
+I0222 03:23:49.409975 16180 net.cpp:380] da_relu5 <- da_conv5
+I0222 03:23:49.409991 16180 net.cpp:327] da_relu5 -> da_conv5 (in-place)
+I0222 03:23:49.410009 16180 net.cpp:113] Setting up da_relu5
+I0222 03:23:49.410022 16180 net.cpp:120] Top shape: 1 256 6 6 (9216)
+I0222 03:23:49.410032 16180 layer_factory.hpp:74] Creating layer da_roi_pool5
+I0222 03:23:49.410051 16180 net.cpp:84] Creating Layer da_roi_pool5
+I0222 03:23:49.410060 16180 net.cpp:380] da_roi_pool5 <- da_conv5
+I0222 03:23:49.410076 16180 net.cpp:380] da_roi_pool5 <- rois
+I0222 03:23:49.410092 16180 net.cpp:338] da_roi_pool5 -> da_pool5
+I0222 03:23:49.410109 16180 net.cpp:113] Setting up da_roi_pool5
+I0222 03:23:49.410120 16180 roi_pooling_layer.cpp:30] Spatial scale: 0.0625
+I0222 03:23:49.410147 16180 net.cpp:120] Top shape: 1 256 6 6 (9216)
+I0222 03:23:49.410156 16180 layer_factory.hpp:74] Creating layer da_fc6
+I0222 03:23:49.410176 16180 net.cpp:84] Creating Layer da_fc6
+I0222 03:23:49.410186 16180 net.cpp:380] da_fc6 <- da_pool5
+I0222 03:23:49.410199 16180 net.cpp:338] da_fc6 -> da_fc6
+I0222 03:23:49.410215 16180 net.cpp:113] Setting up da_fc6
+I0222 03:23:50.269825 16180 net.cpp:120] Top shape: 1 4096 (4096)
+I0222 03:23:50.269860 16180 layer_factory.hpp:74] Creating layer da_relu6
+I0222 03:23:50.269876 16180 net.cpp:84] Creating Layer da_relu6
+I0222 03:23:50.269886 16180 net.cpp:380] da_relu6 <- da_fc6
+I0222 03:23:50.269904 16180 net.cpp:327] da_relu6 -> da_fc6 (in-place)
+I0222 03:23:50.269922 16180 net.cpp:113] Setting up da_relu6
+I0222 03:23:50.269933 16180 net.cpp:120] Top shape: 1 4096 (4096)
+I0222 03:23:50.269942 16180 layer_factory.hpp:74] Creating layer da_drop6
+I0222 03:23:50.269968 16180 net.cpp:84] Creating Layer da_drop6
+I0222 03:23:50.269978 16180 net.cpp:380] da_drop6 <- da_fc6
+I0222 03:23:50.269990 16180 net.cpp:327] da_drop6 -> da_fc6 (in-place)
+I0222 03:23:50.270004 16180 net.cpp:113] Setting up da_drop6
+I0222 03:23:50.270021 16180 net.cpp:120] Top shape: 1 4096 (4096)
+I0222 03:23:50.270030 16180 layer_factory.hpp:74] Creating layer da_fc7
+I0222 03:23:50.270046 16180 net.cpp:84] Creating Layer da_fc7
+I0222 03:23:50.270056 16180 net.cpp:380] da_fc7 <- da_fc6
+I0222 03:23:50.270071 16180 net.cpp:338] da_fc7 -> da_fc7
+I0222 03:23:50.270092 16180 net.cpp:113] Setting up da_fc7
+I0222 03:23:50.617283 16180 net.cpp:120] Top shape: 1 4096 (4096)
+I0222 03:23:50.617314 16180 layer_factory.hpp:74] Creating layer da_relu7
+I0222 03:23:50.617332 16180 net.cpp:84] Creating Layer da_relu7
+I0222 03:23:50.617341 16180 net.cpp:380] da_relu7 <- da_fc7
+I0222 03:23:50.617357 16180 net.cpp:327] da_relu7 -> da_fc7 (in-place)
+I0222 03:23:50.617374 16180 net.cpp:113] Setting up da_relu7
+I0222 03:23:50.617386 16180 net.cpp:120] Top shape: 1 4096 (4096)
+I0222 03:23:50.617395 16180 layer_factory.hpp:74] Creating layer da_drop7
+I0222 03:23:50.617411 16180 net.cpp:84] Creating Layer da_drop7
+I0222 03:23:50.617419 16180 net.cpp:380] da_drop7 <- da_fc7
+I0222 03:23:50.617432 16180 net.cpp:327] da_drop7 -> da_fc7 (in-place)
+I0222 03:23:50.617445 16180 net.cpp:113] Setting up da_drop7
+I0222 03:23:50.617461 16180 net.cpp:120] Top shape: 1 4096 (4096)
+I0222 03:23:50.617470 16180 layer_factory.hpp:74] Creating layer da_fc7_da_drop7_0_split
+I0222 03:23:50.617487 16180 net.cpp:84] Creating Layer da_fc7_da_drop7_0_split
+I0222 03:23:50.617496 16180 net.cpp:380] da_fc7_da_drop7_0_split <- da_fc7
+I0222 03:23:50.617509 16180 net.cpp:338] da_fc7_da_drop7_0_split -> da_fc7_da_drop7_0_split_0
+I0222 03:23:50.617524 16180 net.cpp:338] da_fc7_da_drop7_0_split -> da_fc7_da_drop7_0_split_1
+I0222 03:23:50.617542 16180 net.cpp:113] Setting up da_fc7_da_drop7_0_split
+I0222 03:23:50.617557 16180 net.cpp:120] Top shape: 1 4096 (4096)
+I0222 03:23:50.617568 16180 net.cpp:120] Top shape: 1 4096 (4096)
+I0222 03:23:50.617578 16180 layer_factory.hpp:74] Creating layer da_cls_score
+I0222 03:23:50.617595 16180 net.cpp:84] Creating Layer da_cls_score
+I0222 03:23:50.617604 16180 net.cpp:380] da_cls_score <- da_fc7_da_drop7_0_split_0
+I0222 03:23:50.617619 16180 net.cpp:338] da_cls_score -> cls_score_1
+I0222 03:23:50.617633 16180 net.cpp:113] Setting up da_cls_score
+I0222 03:23:50.619386 16180 net.cpp:120] Top shape: 1 20 (20)
+I0222 03:23:50.619405 16180 layer_factory.hpp:74] Creating layer da_bbox_pred
+I0222 03:23:50.619418 16180 net.cpp:84] Creating Layer da_bbox_pred
+I0222 03:23:50.619427 16180 net.cpp:380] da_bbox_pred <- da_fc7_da_drop7_0_split_1
+I0222 03:23:50.619442 16180 net.cpp:338] da_bbox_pred -> bbox_pred_1
+I0222 03:23:50.619458 16180 net.cpp:113] Setting up da_bbox_pred
+I0222 03:23:50.626622 16180 net.cpp:120] Top shape: 1 80 (80)
+I0222 03:23:50.626667 16180 layer_factory.hpp:74] Creating layer da_loss_cls
+I0222 03:23:50.626695 16180 net.cpp:84] Creating Layer da_loss_cls
+I0222 03:23:50.626706 16180 net.cpp:380] da_loss_cls <- cls_score_1
+I0222 03:23:50.626723 16180 net.cpp:380] da_loss_cls <- labels
+I0222 03:23:50.626737 16180 net.cpp:338] da_loss_cls -> da_loss_cls
+I0222 03:23:50.626756 16180 net.cpp:113] Setting up da_loss_cls
+I0222 03:23:50.626768 16180 layer_factory.hpp:74] Creating layer da_loss_cls
+I0222 03:23:50.626798 16180 net.cpp:120] Top shape: (1)
+I0222 03:23:50.626807 16180 net.cpp:122]     with loss weight 0.5
+I0222 03:23:50.626828 16180 layer_factory.hpp:74] Creating layer da_loss_bbox
+I0222 03:23:50.626847 16180 net.cpp:84] Creating Layer da_loss_bbox
+I0222 03:23:50.626855 16180 net.cpp:380] da_loss_bbox <- bbox_pred_1
+I0222 03:23:50.626866 16180 net.cpp:380] da_loss_bbox <- bbox_targets
+I0222 03:23:50.626878 16180 net.cpp:380] da_loss_bbox <- bbox_loss_weights
+I0222 03:23:50.626890 16180 net.cpp:338] da_loss_bbox -> da_loss_bbox
+I0222 03:23:50.626905 16180 net.cpp:113] Setting up da_loss_bbox
+I0222 03:23:50.626920 16180 net.cpp:120] Top shape: (1)
+I0222 03:23:50.626929 16180 net.cpp:122]     with loss weight 0.5
+I0222 03:23:50.626941 16180 net.cpp:167] da_loss_bbox needs backward computation.
+I0222 03:23:50.626951 16180 net.cpp:167] da_loss_cls needs backward computation.
+I0222 03:23:50.626961 16180 net.cpp:167] da_bbox_pred needs backward computation.
+I0222 03:23:50.626971 16180 net.cpp:167] da_cls_score needs backward computation.
+I0222 03:23:50.626981 16180 net.cpp:167] da_fc7_da_drop7_0_split needs backward computation.
+I0222 03:23:50.626991 16180 net.cpp:167] da_drop7 needs backward computation.
+I0222 03:23:50.626999 16180 net.cpp:167] da_relu7 needs backward computation.
+I0222 03:23:50.627008 16180 net.cpp:167] da_fc7 needs backward computation.
+I0222 03:23:50.627017 16180 net.cpp:167] da_drop6 needs backward computation.
+I0222 03:23:50.627025 16180 net.cpp:167] da_relu6 needs backward computation.
+I0222 03:23:50.627034 16180 net.cpp:167] da_fc6 needs backward computation.
+I0222 03:23:50.627043 16180 net.cpp:167] da_roi_pool5 needs backward computation.
+I0222 03:23:50.627051 16180 net.cpp:167] da_relu5 needs backward computation.
+I0222 03:23:50.627058 16180 net.cpp:167] da_conv5 needs backward computation.
+I0222 03:23:50.627064 16180 net.cpp:167] da_relu4 needs backward computation.
+I0222 03:23:50.627087 16180 net.cpp:167] da_conv4 needs backward computation.
+I0222 03:23:50.627097 16180 net.cpp:167] da_relu3 needs backward computation.
+I0222 03:23:50.627105 16180 net.cpp:167] da_conv3 needs backward computation.
+I0222 03:23:50.627115 16180 net.cpp:167] da_pool2 needs backward computation.
+I0222 03:23:50.627125 16180 net.cpp:167] da_relu2 needs backward computation.
+I0222 03:23:50.627133 16180 net.cpp:167] da_conv2 needs backward computation.
+I0222 03:23:50.627142 16180 net.cpp:167] da_pool1 needs backward computation.
+I0222 03:23:50.627152 16180 net.cpp:167] da_relu1 needs backward computation.
+I0222 03:23:50.627161 16180 net.cpp:167] da_conv1 needs backward computation.
+I0222 03:23:50.627172 16180 net.cpp:169] data does not need backward computation.
+I0222 03:23:50.627179 16180 net.cpp:205] This network produces output da_loss_bbox
+I0222 03:23:50.627187 16180 net.cpp:205] This network produces output da_loss_cls
+I0222 03:23:50.627219 16180 net.cpp:447] Collecting Learning Rate and Weight Decay.
+I0222 03:23:50.627236 16180 net.cpp:217] Network initialization done.
+I0222 03:23:50.627246 16180 net.cpp:218] Memory required for data: 1670960
+I0222 03:23:50.627367 16180 solver.cpp:42] Solver scaffolding done.
+Solving...
+I0222 03:23:51.416291 16180 solver.cpp:189] Iteration 0, loss = 2.12365
+I0222 03:23:51.416345 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.377526 (* 0.5 = 0.188763 loss)
+I0222 03:23:51.416363 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 3.86977 (* 0.5 = 1.93488 loss)
+I0222 03:23:51.416380 16180 solver.cpp:464] Iteration 0, lr = 0.01
+I0222 03:23:56.882805 16180 solver.cpp:189] Iteration 20, loss = 0.73758
+I0222 03:23:56.882863 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.428372 (* 0.5 = 0.214186 loss)
+I0222 03:23:56.882879 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.04679 (* 0.5 = 0.523394 loss)
+I0222 03:23:56.882892 16180 solver.cpp:464] Iteration 20, lr = 0.01
+I0222 03:24:02.382210 16180 solver.cpp:189] Iteration 40, loss = 0.705365
+I0222 03:24:02.382266 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.238408 (* 0.5 = 0.119204 loss)
+I0222 03:24:02.382282 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.17232 (* 0.5 = 0.586161 loss)
+I0222 03:24:02.382299 16180 solver.cpp:464] Iteration 40, lr = 0.01
+I0222 03:24:07.905433 16180 solver.cpp:189] Iteration 60, loss = 0.764614
+I0222 03:24:07.905480 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.429878 (* 0.5 = 0.214939 loss)
+I0222 03:24:07.905496 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.09935 (* 0.5 = 0.549675 loss)
+I0222 03:24:07.905509 16180 solver.cpp:464] Iteration 60, lr = 0.01
+I0222 03:24:13.214253 16180 solver.cpp:189] Iteration 80, loss = 0.746636
+I0222 03:24:13.214306 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.475446 (* 0.5 = 0.237723 loss)
+I0222 03:24:13.214323 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.01783 (* 0.5 = 0.508913 loss)
+I0222 03:24:13.214335 16180 solver.cpp:464] Iteration 80, lr = 0.01
+I0222 03:24:18.503711 16180 solver.cpp:189] Iteration 100, loss = 0.749945
+I0222 03:24:18.503759 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.392274 (* 0.5 = 0.196137 loss)
+I0222 03:24:18.503775 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.10762 (* 0.5 = 0.553808 loss)
+I0222 03:24:18.503789 16180 solver.cpp:464] Iteration 100, lr = 0.01
+I0222 03:24:23.902102 16180 solver.cpp:189] Iteration 120, loss = 0.88515
+I0222 03:24:23.902170 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.491906 (* 0.5 = 0.245953 loss)
+I0222 03:24:23.902189 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.27839 (* 0.5 = 0.639197 loss)
+I0222 03:24:23.902201 16180 solver.cpp:464] Iteration 120, lr = 0.01
+I0222 03:24:29.980144 16180 solver.cpp:189] Iteration 140, loss = 0.902119
+I0222 03:24:29.980216 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.367962 (* 0.5 = 0.183981 loss)
+I0222 03:24:29.980247 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.43628 (* 0.5 = 0.718138 loss)
+I0222 03:24:29.980264 16180 solver.cpp:464] Iteration 140, lr = 0.01
+I0222 03:24:35.665544 16180 solver.cpp:189] Iteration 160, loss = 0.788301
+I0222 03:24:35.665597 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.362072 (* 0.5 = 0.181036 loss)
+I0222 03:24:35.665613 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.21453 (* 0.5 = 0.607265 loss)
+I0222 03:24:35.665626 16180 solver.cpp:464] Iteration 160, lr = 0.01
+I0222 03:24:40.999236 16180 solver.cpp:189] Iteration 180, loss = 0.882748
+I0222 03:24:40.999290 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.452842 (* 0.5 = 0.226421 loss)
+I0222 03:24:40.999305 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.31265 (* 0.5 = 0.656327 loss)
+I0222 03:24:40.999320 16180 solver.cpp:464] Iteration 180, lr = 0.01
+speed: 0.275s / iter
+I0222 03:24:46.275828 16180 solver.cpp:189] Iteration 200, loss = 0.87574
+I0222 03:24:46.275885 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.495687 (* 0.5 = 0.247843 loss)
+I0222 03:24:46.275902 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.25579 (* 0.5 = 0.627897 loss)
+I0222 03:24:46.275918 16180 solver.cpp:464] Iteration 200, lr = 0.01
+I0222 03:24:51.477304 16180 solver.cpp:189] Iteration 220, loss = 0.695183
+I0222 03:24:51.477362 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.464971 (* 0.5 = 0.232485 loss)
+I0222 03:24:51.477380 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 0.925394 (* 0.5 = 0.462697 loss)
+I0222 03:24:51.477392 16180 solver.cpp:464] Iteration 220, lr = 0.01
+I0222 03:24:56.767595 16180 solver.cpp:189] Iteration 240, loss = 0.746472
+I0222 03:24:56.767650 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.303596 (* 0.5 = 0.151798 loss)
+I0222 03:24:56.767671 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.18935 (* 0.5 = 0.594674 loss)
+I0222 03:24:56.767688 16180 solver.cpp:464] Iteration 240, lr = 0.01
+I0222 03:25:01.916123 16180 solver.cpp:189] Iteration 260, loss = 0.887177
+I0222 03:25:01.916189 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.359874 (* 0.5 = 0.179937 loss)
+I0222 03:25:01.916206 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.41448 (* 0.5 = 0.70724 loss)
+I0222 03:25:01.916245 16180 solver.cpp:464] Iteration 260, lr = 0.01
+I0222 03:25:08.024947 16180 solver.cpp:189] Iteration 280, loss = 0.781569
+I0222 03:25:08.024991 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.502067 (* 0.5 = 0.251034 loss)
+I0222 03:25:08.025002 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.06107 (* 0.5 = 0.530536 loss)
+I0222 03:25:08.025012 16180 solver.cpp:464] Iteration 280, lr = 0.01
+I0222 03:25:15.624617 16180 solver.cpp:189] Iteration 300, loss = 0.786922
+I0222 03:25:15.624661 16180 solver.cpp:204]     Train net output #0: da_loss_bbox = 0.457296 (* 0.5 = 0.228648 loss)
+I0222 03:25:15.624672 16180 solver.cpp:204]     Train net output #1: da_loss_cls = 1.11655 (* 0.5 = 0.558274 loss)
+I0222 03:25:15.624681 16180 solver.cpp:464] Iteration 300, lr = 0.01
