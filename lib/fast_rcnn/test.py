@@ -295,7 +295,7 @@ def test_net(net, imdb):
     for i in xrange(num_images):
         image_paths = imdb.image_path_at(i); im = [];
         for image_path in image_paths:
-            image_path2 = image_path + '_norm.png'
+            image_path2 = image_path + '_hha.png'
             im1 = cv2.imread(image_path)
             im2 = cv2.imread(image_path2)
             ims = np.zeros((im1.shape[0], im1.shape[1], 6))

@@ -132,7 +132,7 @@ def _get_image_blob(roidb, scale_inds, data_i):
     im_scales = []
     for i in xrange(num_images):
         imname1 = roidb[i]['image'][data_i]
-        imname2= imname1 + '_norm.png'
+        imname2= imname1 + '_hha.png'
         im1= cv2.imread(imname1)
         im2= cv2.imread(imname2) 
         if roidb[i]['flipped']:
