@@ -100,7 +100,7 @@ layer {
     bias_filler { type: "constant" value: 1 }
   }
 }
-layer { name: "da_relu6" type: "ReLU" bottom: "da_fc6" top: "da_fc6" }
+layer { name: "da_relu6" type: "ReLU" bottom: "da_fc6" top: "da_fc6" relu_param{ negative_slope: 0.2 } }
 
 layer {
   name: "da_drop6" type: "Dropout" bottom: "da_fc6" top: "da_fc6"
@@ -118,7 +118,7 @@ layer {
   }
 }
 
-layer { name: "da_relu7" type: "ReLU" bottom: "da_fc7" top: "da_fc7" }
+layer { name: "da_relu7" type: "ReLU" bottom: "da_fc7" top: "da_fc7" relu_param{ negative_slope: 0.2 } }
 
 layer {
   name: "da_drop7" type: "Dropout" bottom: "da_fc7" top: "da_fc7"
