@@ -25,7 +25,6 @@ layer {
   }
 }
 
-}
 
 layer {
   name: "bn1"

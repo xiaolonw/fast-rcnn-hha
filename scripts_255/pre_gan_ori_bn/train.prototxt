@@ -24,8 +24,6 @@ layer {
   }
 }
 
-}
-
 layer {
   name: "bn1"
   type: "BatchNorm"
